@@ -57,7 +57,7 @@ def zad10(ciagZnakow):
     print("To jest palindrom")
     return True
 
-def zad10_prosta(ciagZnakow):
+def zad10_prostsze(ciagZnakow):
     rev = ''.join(reversed(ciagZnakow))
 
     if ciagZnakow != rev:
@@ -77,4 +77,4 @@ print(zad7(lista))
 print(zad8())
 print(zad9(4))
 zad10('alsla')
-zad11('allsa')
+zad10_prostsze('allsa')
