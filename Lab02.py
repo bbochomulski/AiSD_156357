@@ -96,7 +96,7 @@ class Queue():
         self.queue = LinkedList()
 
     def peek(self):
-        return self.queue.node(0).value
+        return self.queue.head.value
     
     def enqueue(self, wartosc):
         self.queue.append(wartosc)
