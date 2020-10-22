@@ -46,25 +46,6 @@ def prime(n: int) -> bool:
         i += 1
     return True
 
-def n_sums(n: int):
-    lista = []
-    sumaParzystych = 0
-    sumaNieparzystych = 0
-    for liczba in range(int(math.pow(10,n-1)), int(math.pow(10,n))):
-        liczba = str(liczba)
-        for i in range(n):
-            if i % 2 == 0:
-                sumaParzystych += int(liczba[i])
-            else:
-                sumaNieparzystych += int(liczba[i])
-        if sumaParzystych == sumaNieparzystych:
-            lista.append(int(liczba))
-            sumaNieparzystych = 0
-            sumaParzystych = 0
-    return lista
-    
-print(n_sums(2))
-
 
 #numbers(20)                                     # Zadanie1
 #print(f'Fib(10): {fib(10)}')                    # Zadanie2
