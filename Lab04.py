@@ -36,17 +36,11 @@ class TreeNode:
                 kolejka.put(child)
 
     def search(self, value: Any):
-        kolejka = queue.Queue()
         if self.value == value:
             return True
-        for child in self.children:
-            kolejka.put(child)
-        while(kolejka.empty() != True):
-            element = kolejka.get()
-            if element.value == value:
+        for node in self.children:
+            if node.search(value):
                 return True
-            for child in element.children:
-                kolejka.put(child)
         return False
 
     def __repr__(self):
@@ -144,3 +138,4 @@ v.print()
 #### test metody search ####
 assert drzewo2.root.search('E') == True
 
+drzewo.show()
