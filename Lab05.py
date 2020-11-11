@@ -63,11 +63,11 @@ class BinaryTree:
         self.root.traverse_pre_order(visit)
 
     def show(self):
-        builded = []
+        nodes = []
         current_level = [self.root]
         while current_level:
             for node in current_level:
-                builded.append(node)
+                nodes.append(node)
             next_level = list()
             for n in current_level:
                 if n != None:
@@ -83,7 +83,7 @@ class BinaryTree:
 
         ### konwersja listy wartosci do wydruku poprzez biblioteke binarytree
         values = list()
-        for node in builded:
+        for node in nodes:
             if node != None:
                 values.append(node.value)
             else:
