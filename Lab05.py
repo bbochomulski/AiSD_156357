@@ -51,7 +51,7 @@ class BinaryTree:
     root: BinaryNode
 
     def __init__(self, root):
-        self.root = root
+        self.root = BinaryNode(root)
 
     def traverse_in_order(self,visit):
         self.root.traverse_in_order(visit)
@@ -63,35 +63,34 @@ class BinaryTree:
         self.root.traverse_pre_order(visit)
 
     def show(self):
-        nodes = []
-        current_level = [self.root]
-        while current_level:
-            for node in current_level:
-                nodes.append(node)
-            next_level = list()
-            for n in current_level:
-                if n != None:
-                    if n.left_child:
-                        next_level.append(n.left_child)
-                    else:
-                        next_level.append(None)
-                    if n.right_child:
-                        next_level.append(n.right_child)
-                    else:
-                        next_level.append(None)
-            current_level = next_level
+        nodes = [] # lista która będzie zawierać wyjściową liste obiektów
+        current_level = [self.root] # lista zawierająca węzly z aktualnego poziomu - wstępnie korzeń
+        while current_level: # dopóki w aktualnym poziomie są jakieś elementy
+            for node in current_level: # przepisuje elementy aktualnego poziomu do 
+                nodes.append(node)     # listy wynikowej
+            next_level = list() # tworzy pustą liste która będzie zawierać elementy z następnego poziomu
+            for n in current_level: # przechodzi po wszystkich węzłach aktualnego poziomu
+                if n != None: # jeśli węzeł nie jest obiektem None
+                    if n.left_child: # jeśli węzeł posiada lewe dziecko
+                        next_level.append(n.left_child) # dodaje lewe dziecko do listy następnego poziomu
+                    else: # albo
+                        next_level.append(None) # albo jeśli nie posiada dziecka to podaje do listy następnego poziomu obiekt None
+                    if n.right_child: # jeśli węzeł posiada prawe dziecko 
+                        next_level.append(n.right_child) # dodaje prawe dziecko do listy następnego poziomu
+                    else: # albo
+                        next_level.append(None) # jeśli nie posiada to dodaje do listy następnego poziomu obiekt None
+            current_level = next_level # zmiana aktualnego poziomu na następny
 
         ### konwersja listy wartosci do wydruku poprzez biblioteke binarytree
-        values = list()
-        for node in nodes:
-            if node != None:
-                values.append(node.value)
-            else:
-                values.append(None)
-        tree = build(values)
-        print(tree)     
+        values = list() # utworzenie pustej listy wartości
+        for node in nodes: # przejście po liście z poprzedniego fragmentu zawierającej liste obiektów w odpowiedniej kolejności
+            if node != None: # jeśli węzeł nie jest obiektem None
+                values.append(node.value) # dodaje wartość węzła do listy wartości
+            else: # albo
+                values.append(None) # dodaje wartość None do listy wartości żeby biblioteka binarytree narysowała drzewo tak jak trzeba
+        tree = build(values) # zbudowanie drzewa metodą build z biblioteki binarytree
+        print(tree) # wydrukowanie drzewa na ekran
         ###       
-
 
 class visited:
     visited: list
@@ -106,35 +105,17 @@ class visited:
         print(self.visited)
         self.visited.clear()
 
-
 v = visited()
 def _visit(node: BinaryNode):
     v.append(node.value)
 
-Node6 = BinaryNode(6)
-Node6.add_left_child(20)
-Node4 = BinaryNode(4)
-Node2 = BinaryNode(2,Node4,Node6)
-Node3 = BinaryNode(3)
-Node3.add_right_child(21)
-Node1 = BinaryNode(1)
-Node9 = BinaryNode(9,Node1,Node3)
-tree = BinaryTree(BinaryNode(10, Node9, Node2))
+###### przestrzen testowa #######
 
-tree.traverse_in_order(_visit)
-print("In order: ")
-v.print()
-tree.traverse_post_order(_visit)
-print("Post order: ")
-v.print()
-tree.traverse_pre_order(_visit)
-print("Pre order: ")
-v.print()
+tree = BinaryTree(10)
+tree.root.add_left_child(9)
+tree.root.add_right_child(11)
 
-assert tree.root.value == 10
-assert tree.root.right_child.value == 2
-assert tree.root.right_child.is_leaf() is False
-assert tree.root.left_child.left_child.value == 1
-assert tree.root.left_child.left_child.is_leaf() is True
-print('')
+tree.root.left_child.add_left_child(15)
+tree.root.left_child.add_right_child(18)
+
 tree.show()
