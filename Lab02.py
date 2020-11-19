@@ -28,7 +28,7 @@ class LinkedList:
             self.tail = nowy
         
     def append(self,wartosc):
-        nowy = Node(value = wartosc)
+        nowy = Node(wartosc)
         if(self.tail == None and self.head == None):
             self.head = nowy
             self.tail = nowy
@@ -55,9 +55,14 @@ class LinkedList:
 
     def pop(self):
         obiekt = self.head
-        self.head = self.head.next
-        obiekt.next = None
-        return obiekt.value
+        if self.head == self.tail:
+            self.head = None
+            self.tail = None
+            return obiekt.value
+        else:
+            self.head = self.head.next
+            obiekt.next = None
+            return obiekt.value
     
     def remove_last(self):
         obiekt = self.head
@@ -79,12 +84,12 @@ class LinkedList:
         return f'{self.head}'
     
     def __len__(self):
-        if (self.head == None and self.tail == None):
+        if (self.head == None):
             return 0
         
         obiekt = self.head
         licznik = 1
-        while(obiekt.next != None):
+        while obiekt.next != None:
             obiekt = obiekt.next
             licznik += 1
         return licznik
@@ -95,13 +100,13 @@ class Queue():
     def __init__(self):
         self.queue = LinkedList()
 
-    def peek(self):
+    def peek(self):                    # zwraca wartosc pierwszego elementu w kolejce
         return self.queue.head.value
     
-    def enqueue(self, wartosc):
+    def enqueue(self, wartosc):        # dodaje element do kolejki                         
         self.queue.append(wartosc)
     
-    def dequeue(self):
+    def dequeue(self):                 # zwraca pierwszy element w kolejce
         return self.queue.pop()
 
     def __repr__(self):
@@ -111,52 +116,52 @@ class Queue():
         return len(self.queue)
 
         
-####### Zadanie 1 #######
-list_ = LinkedList()
+# ####### Zadanie 1 #######
+# list_ = LinkedList()
 
-assert list_.head == None
+# assert list_.head == None
 
-list_.push(1)
-list_.push(0)
-assert str(list_) == '0 -> 1'
+# list_.push(1)
+# list_.push(0)
+# assert str(list_) == '0 -> 1'
 
-list_.append(9)
-list_.append(10)
-assert str(list_) == '0 -> 1 -> 9 -> 10'
+# list_.append(9)
+# list_.append(10)
+# assert str(list_) == '0 -> 1 -> 9 -> 10'
 
-middle_node = list_.node(1)
-list_.insert(5,middle_node)
-assert str(list_) == '0 -> 1 -> 5 -> 9 -> 10'
+# middle_node = list_.node(1)
+# list_.insert(5,middle_node)
+# assert str(list_) == '0 -> 1 -> 5 -> 9 -> 10'
 
-first_element = list_.node(0)
-returned_first_element = list_.pop()
-assert first_element.value == returned_first_element
+# first_element = list_.node(0)
+# returned_first_element = list_.pop()
+# assert first_element.value == returned_first_element
 
 
-last_element = list_.node(at=3)
-returned_last_element = list_.remove_last()
+# last_element = list_.node(at=3)
+# returned_last_element = list_.remove_last()
 
-assert last_element.value == returned_last_element
-assert str(list_) == '1 -> 5 -> 9'
+# assert last_element.value == returned_last_element
+# assert str(list_) == '1 -> 5 -> 9'
 
-second_node = list_.node(at=1)
-list_.remove(second_node)
-assert str(list_) == '1 -> 5'
+# second_node = list_.node(at=1)
+# list_.remove(second_node)
+# assert str(list_) == '1 -> 5'
 
-####### Zadanie 3 #######
+# ####### Zadanie 3 #######
 
-queue = Queue()
+# queue = Queue()
 
-assert len(queue) == 0
+# assert len(queue) == 0
 
-queue.enqueue('klient1')
-queue.enqueue('klient2')
-queue.enqueue('klient3')
+# queue.enqueue('klient1')
+# queue.enqueue('klient2')
+# queue.enqueue('klient3')
 
-assert str(queue) == 'klient1 -> klient2 -> klient3'
+# assert str(queue) == 'klient1 -> klient2 -> klient3'
 
-client_first = queue.dequeue()
+# client_first = queue.dequeue()
 
-assert client_first == 'klient1'
-assert str(queue) == 'klient2 -> klient3'
-assert len(queue) == 2
+# assert client_first == 'klient1'
+# assert str(queue) == 'klient2 -> klient3'
+# assert len(queue) == 2
