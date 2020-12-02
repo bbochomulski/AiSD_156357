@@ -2,7 +2,6 @@ from enum import Enum
 from typing import Any, Optional, Dict, List
 from Lab02 import Queue
 import pandas as pd
-import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -40,11 +39,26 @@ class Graph:
 
     def __init__(self):
         self.adjacencies = dict()
+    
+    def __iter__(self):
+        self.n = 0
+        return self
+
+    def __next__(self):
+        if self.n < len(list(self.adjacencies.keys())):
+            result = list(self.adjacencies.keys())[self.n]
+            self.n += 1
+            return result
+        else:
+            raise StopIteration
 
     def get(self,data):
+        vertex = None
         for vertex in self.adjacencies.keys():
             if vertex.data == data:
                 return vertex
+        if vertex == None:
+            return False
 
     def create_vertex(self,data):
         maxindex = 0
@@ -73,7 +87,7 @@ class Graph:
     def traverse_breadth_first(self, visit):
         kolejka = Queue()
         odwiedzone = list()
-        first = list(graf.adjacencies.keys())[0]
+        first = list(self.adjacencies.keys())[0]
         kolejka.enqueue(first)
 
         while len(kolejka) != 0:
@@ -87,7 +101,7 @@ class Graph:
                         odwiedzone.append(edge.destination)
 
     def traverse_depth_first(self, visit):
-        first = list(graf.adjacencies.keys())[0]
+        first = list(self.adjacencies.keys())[0]
         visited = list()
         v = first
         self.dfs(v, visited, visit)
@@ -101,7 +115,7 @@ class Graph:
 
     def __repr__(self):
         output = ""
-        listVertex = list(graf.adjacencies.keys())
+        listVertex = list(self.adjacencies.keys())
         for vertex in listVertex:
             output += f'{vertex.data} ----> '
             edges = self.adjacencies[vertex]
@@ -111,9 +125,10 @@ class Graph:
             output += f'{neighbours}\n'
         return output
 
-    def show(self):
-        first = list(graf.adjacencies.keys())[0]
+    def show(self, path = list()):
+        first = list(self.adjacencies.keys())[0]
         edges = list()
+        wazony = False
         kolejka = Queue()
         kolejka.enqueue(first)
         while len(kolejka) != 0:
@@ -122,43 +137,60 @@ class Graph:
                 if edge not in edges:
                     edges.append(edge)
                     kolejka.enqueue(edge.destination)
-        od = list()
-        do = list()
+        G = nx.DiGraph()
+        nodes = list()
+        for e in path:
+            for ed in e:
+                if nodes.count(ed) == 0:
+                    nodes.append(ed)
         for edge in edges:
-            od.append(edge.source)
-            do.append(edge.destination)
+            if edge.weight != None:
+                wazony = True
+                if (edge.source, edge.destination) in path:
+                    G.add_edge(edge.source,edge.destination,weight=edge.weight, color='r',width=4)
+                else:
+                    G.add_edge(edge.source,edge.destination,weight=edge.weight,color='black',width=1)
+            else:
+                if (edge.source, edge.destination) in path:
+                    G.add_edge(edge.source,edge.destination, color='r',width=4)
+                else:
+                    G.add_edge(edge.source,edge.destination,color='black',width=1)
 
-        df = pd.DataFrame({ 'from':od, 'to':do})
-        G=nx.from_pandas_edgelist(df, 'from', 'to', create_using=nx.DiGraph())
-        nx.draw_kamada_kawai(G, with_labels=True, node_size=1000, alpha=0.8, arrows=True)
-        # nx.draw_circular(G, with_labels=True, node_size=1000, alpha=0.8, arrows=True)
+        color_map = list()
+        for node in self:
+            if node in nodes:
+                color_map.append('red')
+            else:
+                color_map.append('blue')
+
+        colors = nx.get_edge_attributes(G,'color').values()
+        widths = [x for x in nx.get_edge_attributes(G,'width').values()]
+        if wazony:
+            pos = nx.planar_layout(G)
+        else:
+            pos = nx.circular_layout(G)
+        nx.draw(G,pos, edge_color = colors,node_color=color_map,width=widths,with_labels=True, node_size=1000, alpha=0.8, arrows=True)
+        labels = nx.get_edge_attributes(G,'weight')
+        nx.draw_networkx_edge_labels(G,pos,edge_labels=labels)
         plt.show()
 
 listaOdwiedzonych = list()
 def _visit(vertex):
     listaOdwiedzonych.append(vertex.data)
 
-graf = Graph()
-graf.create_vertex("v0")
-graf.create_vertex("v1")
-graf.create_vertex("v2")
-graf.create_vertex("v3")
-graf.create_vertex("v4")
-graf.create_vertex("v5")
+# graf = Graph()
+# graf.create_vertex("A")
+# graf.create_vertex("B")
+# graf.create_vertex("C")
+# graf.create_vertex("D")
 
-graf.add(EdgeType(1),graf.get("v0"),graf.get("v1"))
-graf.add(EdgeType(2),graf.get("v0"),graf.get("v5"))
-graf.add(EdgeType(1),graf.get("v5"),graf.get("v2"))
-graf.add(EdgeType(1),graf.get("v5"),graf.get("v1"))
-graf.add(EdgeType(2),graf.get("v2"),graf.get("v3"))
-graf.add(EdgeType(1),graf.get("v2"),graf.get("v1"))
-graf.add(EdgeType(1),graf.get("v3"),graf.get("v4"))
-graf.add(EdgeType(2),graf.get("v4"),graf.get("v1"))
-graf.add(EdgeType(1),graf.get("v4"),graf.get("v5"))
+# graf.add(EdgeType(1),graf.get("B"),graf.get("D"))
+# graf.add(EdgeType(1),graf.get("C"),graf.get("B"))
+# graf.add(EdgeType(1),graf.get("C"),graf.get("D"))
+# graf.add(EdgeType(1),graf.get("A"),graf.get("B"))
+# graf.add(EdgeType(1),graf.get("A"),graf.get("C"))
 
-print(graf)
-
-graf.show()
+# graf.show()
 
 # graf.traverse_breadth_first(_visit)
 

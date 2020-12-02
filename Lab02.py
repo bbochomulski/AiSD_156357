@@ -100,6 +100,11 @@ class Queue():
     def __init__(self):
         self.queue = LinkedList()
 
+    def __bool__(self):
+        if self.queue.head == None and self.queue.tail == None:
+            return False
+        return True
+
     def peek(self):                    # zwraca wartosc pierwszego elementu w kolejce
         return self.queue.head.value
     
