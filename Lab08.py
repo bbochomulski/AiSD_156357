@@ -12,15 +12,7 @@ class GraphPath:
         if source and destination in self.graph:
             self.source = source
             self.destination = destination
-            self.path = list()
-            if self.graph.adjacencies[self.source][0].weight != None:
-                print("Graf wazony: uzywam algorytmu Dijkstry")
-                self._wazony = True
-                self._dijkstra()
-            else:
-                print("Graf niewazony: uzywam przechodzenia wszerz")
-                self._wazony = False
-                self._wszerz()
+            self.path = self.selectMethod()
         else:
             if source not in self.graph:
                 print("Wierzcholek startowy nie istnieje")
@@ -28,14 +20,24 @@ class GraphPath:
                 print("Wierzcholek docelowy nie istnieje")
     
     def __repr__(self):
-        string = f"Sciezka {self.source} -> {self.destination} wykonana za pomoca"
+        strng = f"Sciezka {self.source} -> {self.destination} wykonana za pomoca"
         lista = ' -> '.join(str(bit) for bit in self.path)
         if self._wazony:
-            string = f"{string} algorytmu Dijkstry: {lista}\nKoszt: {self.price}"
-            return string
+            strng = f"{strng} algorytmu Dijkstry: {lista}\nKoszt: {self.price}"
+            return strng
         else:
-            string = f"{string} przechodzenia wszerz: {lista}"
-            return string
+            strng = f"{strng} przechodzenia wszerz: {lista}"
+            return strng
+
+    def selectMethod(self):
+        if self.graph.adjacencies[self.source][0].weight != None:
+            print("Graf wazony: uzywam algorytmu Dijkstry")
+            self._wazony = True
+            return self._dijkstra()
+        else:
+            print("Graf niewazony: uzywam przechodzenia wszerz")
+            self._wazony = False
+            return self._wszerz()
         
 
     def _dijkstra(self):
@@ -61,15 +63,17 @@ class GraphPath:
             else:
                 v = None
         v = self.destination
+        result = list()
         while v in parents.keys():
-            self.path.append(v)
+            result.append(v)
             v = parents[v]
-        self.path.append(self.source)
-        self.path.reverse()
+        result.append(self.source)
+        result.reverse()
         self.price = price[self.destination]
 
         # print(f'{self.source} -> {self.destination}:\nKoszt: {price[self.destination]}\nSciezka: ',end='')
-        # print(*self.path, sep=' -> ')
+        # print(*result, sep=' -> ')
+        return result
     
         
     def lowVert(self, price, visited):
@@ -98,11 +102,12 @@ class GraphPath:
                     br = True
             if br:
                 break
-        self.path = queue.dequeue()
-        self.path.append(self.destination)
+        result = queue.dequeue()
+        result.append(self.destination)
         # print(f'{self.source} -> {self.destination}:')
         # print('Sciezka: ',end='')
-        # print(*self.path, sep=' -> ')
+        # print(*result, sep=' -> ')
+        return result
 
     def show(self):
         edges = list()
@@ -121,7 +126,7 @@ graf = Graph()
 for _ in ["A","B","C","D"]:
     graf.create_vertex(_)
 
-testGraf = True  # True: graf wazony    False: graf niewazony
+testGraf = False  # True: graf wazony    False: graf niewazony
 testDirected = 1 # 1: graf skierowany     2: graf nieskierowany
 
 if testGraf:
