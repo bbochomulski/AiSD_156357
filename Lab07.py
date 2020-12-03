@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Any, Optional, Dict, List
 from Lab02 import Queue
-import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -132,7 +131,6 @@ class Graph:
         for vertex in self:
             edges.extend(self.adjacencies[vertex])
         G = nx.DiGraph()
-        print(edges)
         nodes = list()
         for e in path:
             for ed in e:

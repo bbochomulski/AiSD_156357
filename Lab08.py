@@ -86,7 +86,7 @@ class GraphPath:
 
     def _wszerz(self):
         queue = Queue()
-        visited = list()
+        visited = [self.source]
         queue.enqueue([self.source])
         while queue:
             br = False
@@ -98,12 +98,11 @@ class GraphPath:
                     np.append(n.destination)
                     visited.append(n.destination)
                     queue.enqueue(np)
-                if n.destination == self.destination:
-                    br = True
-            if br:
-                break
-        result = queue.dequeue()
-        result.append(self.destination)
+                    if n.destination == self.destination:
+                        while queue:
+                            result = queue.dequeue()
+                            if result[0] == self.source and result[-1] == self.destination:
+                                break
         # print(f'{self.source} -> {self.destination}:')
         # print('Sciezka: ',end='')
         # print(*result, sep=' -> ')
@@ -115,45 +114,26 @@ class GraphPath:
         while len(path) > 1:
             v = path.pop(0)
             edges.append((v,path[0]))
+        print(edges)
         self.graph.show(edges)
-
-
-listaOdwiedzonych = list()
-def _visit(vertex):
-    listaOdwiedzonych.append(vertex.data)
 
 graf = Graph()
 for x in ["0","1","2","3","4","5","6"]:
     graf.create_vertex(x)
 
-testGraf = True  # True: graf wazony    False: graf niewazony
-testDirected = 1 # 1: graf skierowany     2: graf nieskierowany
+#graf.add(EdgeType(1/2),wierzcholek_od,wierzcholek_do,waga)
+graf.add(EdgeType(1),graf.get("0"),graf.get("1"))
+graf.add(EdgeType(1),graf.get("0"),graf.get("4"))
+graf.add(EdgeType(1),graf.get("0"),graf.get("2"))
+graf.add(EdgeType(1),graf.get("0"),graf.get("5"))
+graf.add(EdgeType(1),graf.get("2"),graf.get("4"))
+graf.add(EdgeType(1),graf.get("2"),graf.get("6"))
+graf.add(EdgeType(1),graf.get("2"),graf.get("3"))
+graf.add(EdgeType(1),graf.get("2"),graf.get("5"))
+graf.add(EdgeType(1),graf.get("3"),graf.get("5"))
+graf.add(EdgeType(1),graf.get("3"),graf.get("6"))
 
-if testGraf:
-    graf.add(EdgeType(testDirected),graf.get("0"),graf.get("2"),13)
-    graf.add(EdgeType(testDirected),graf.get("0"),graf.get("6"),11)
-    graf.add(EdgeType(testDirected),graf.get("1"),graf.get("2"),12)
-    graf.add(EdgeType(testDirected),graf.get("4"),graf.get("5"),14)
-    graf.add(EdgeType(testDirected),graf.get("4"),graf.get("6"),13)
-    graf.add(EdgeType(testDirected),graf.get("1"),graf.get("5"),15)
-    graf.add(EdgeType(testDirected),graf.get("1"),graf.get("3"),13)
-    graf.add(EdgeType(testDirected),graf.get("3"),graf.get("5"),8)
-    graf.add(EdgeType(testDirected),graf.get("2"),graf.get("6"),9)
-    graf.add(EdgeType(testDirected),graf.get("5"),graf.get("6"),12)
-else:
-    graf.add(EdgeType(testDirected),graf.get("0"),graf.get("2"))
-    graf.add(EdgeType(testDirected),graf.get("0"),graf.get("6"))
-    graf.add(EdgeType(testDirected),graf.get("1"),graf.get("2"))
-    graf.add(EdgeType(testDirected),graf.get("4"),graf.get("5"))
-    graf.add(EdgeType(testDirected),graf.get("4"),graf.get("6"))
-    graf.add(EdgeType(testDirected),graf.get("1"),graf.get("5"))
-    graf.add(EdgeType(testDirected),graf.get("1"),graf.get("3"))
-    graf.add(EdgeType(testDirected),graf.get("3"),graf.get("5"))
-    graf.add(EdgeType(testDirected),graf.get("2"),graf.get("6"))
+sciezka = GraphPath(graf,graf.get("0"), graf.get("6"))
 
-sciezka = GraphPath(graf,graf.get("1"), graf.get("6"))
-
-# print(graf)
 # graf.show()
 sciezka.show()
-# print(sciezka)
