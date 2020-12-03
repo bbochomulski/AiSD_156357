@@ -129,15 +129,10 @@ class Graph:
         first = list(self.adjacencies.keys())[0]
         edges = list()
         wazony = False
-        kolejka = Queue()
-        kolejka.enqueue(first)
-        while len(kolejka) != 0:
-            v = kolejka.dequeue()
-            for edge in self.adjacencies[v]:
-                if edge not in edges:
-                    edges.append(edge)
-                    kolejka.enqueue(edge.destination)
+        for vertex in self:
+            edges.extend(self.adjacencies[vertex])
         G = nx.DiGraph()
+        print(edges)
         nodes = list()
         for e in path:
             for ed in e:
@@ -156,20 +151,16 @@ class Graph:
                 else:
                     G.add_edge(edge.source,edge.destination,color='black',width=1)
 
-        color_map = list()
-        for node in self:
-            if node in nodes:
-                color_map.append('red')
-            else:
-                color_map.append('blue')
-
         colors = nx.get_edge_attributes(G,'color').values()
         widths = [x for x in nx.get_edge_attributes(G,'width').values()]
         if wazony:
             pos = nx.planar_layout(G)
         else:
             pos = nx.circular_layout(G)
-        nx.draw(G,pos, edge_color = colors,node_color=color_map,width=widths,with_labels=True, node_size=1000, alpha=0.8, arrows=True)
+        if len(path) != 0:
+            nx.draw(G,pos, edge_color = colors,width=widths,with_labels=True, node_size=1000, alpha=0.8, arrows=True)
+        else:
+            nx.draw(G,pos,width=widths,with_labels=True, node_size=1000, alpha=0.8, arrows=True)
         labels = nx.get_edge_attributes(G,'weight')
         nx.draw_networkx_edge_labels(G,pos,edge_labels=labels)
         plt.show()
