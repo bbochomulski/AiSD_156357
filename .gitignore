@@ -1,5 +1,3 @@
-.gitignore
-Test*.py
-__pycache__
-*.png
-lekcja*
+*
+!Lab*.py
+!.gitignore
